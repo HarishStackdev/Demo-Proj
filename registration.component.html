@@ -1,0 +1,89 @@
+<div style="width:100%" class="item logo">
+    <span><img style="margin-left:23%;width:20%" src="../../../assets//images/logo-desktop@3x.png" height="70" width="70"></span>
+</div>
+<div class="container">
+  <div class="col-md-6 col-md-offset-3">
+      <div class="header-container">
+          <h2>REGISTER</h2>
+        </div>
+    <div class="form" name="form" [formGroup]="fg">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input [ngClass]="{ 'is-invalid': submitted && fg.controls.firstName.errors }" type="text" class="form-control" name="firstName" formControlName="firstName" />
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input [ngClass]="{ 'is-invalid': submitted && fg.controls.lastName.errors }" type="text" class="form-control" name="lastName" formControlName="lastName" />
+      </div>
+      <div class="form-group">
+        <label for="lastName">Email</label>
+        <input type="text" [ngClass]="{ 'is-invalid': submitted && fg.controls.email.errors }" class="form-control" name="lastName" formControlName="email" />
+      </div>
+      <div class="form-group">
+        <label for="lastName">Phone</label>
+        <input type="text" [ngClass]="{ 'is-invalid': submitted && fg.controls.phone.errors }" class="form-control" name="phone" formControlName="phone" />
+      </div>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" [ngClass]="{ 'is-invalid': submitted && fg.controls.userName.errors }" class="form-control" name="username" formControlName="userName" />
+      </div>
+      <div class="form-group">
+        <label for="password">Choose Password</label>
+        <input type="password" [ngClass]="{ 'is-invalid': submitted && fg.controls.passWord.errors }" class="form-control" name="passWord" formControlName="passWord" />
+      </div>
+      <div class="form-group">
+        <label for="cpassWord">Confirm Password</label>
+        <input type="password" [ngClass]="{ 'is-invalid': submitted && fg.controls.cpassWord.errors }" class="form-control" name="cpassWord" formControlName="cpassWord" />
+      </div>
+      <div class="form-group">
+        <label for="username">Country*</label>
+        <div style="width:100%">
+        <input [ngClass]="{ 'is-invalid': submitted && fg.controls.country.errors }" style="width:4%" type="radio" class="form-control" name="country"
+            formControlName="country" />
+            <span class="usaImg"></span>
+        <input [ngClass]="{ 'is-invalid': submitted && fg.controls.country.errors }" style="width:4%" type="radio" class="form-control" name="country"
+            formControlName="country" />
+            <span class="canadaImg"></span>
+      </div>
+      </div>
+      <div class="form-group">
+        <label for="username">Zip/Postal Code</label>
+        <input type="text" [ngClass]="{ 'is-invalid': submitted && fg.controls.postalCode.errors }"  class="form-control" name="postalCode" formControlName="postalCode" />
+      </div>
+      <div class="form-group input-group">
+          <div style="width:100%"><label for="birthdate">BirthDate*</label>
+            <span class="questionMark" title="date Of Birth" data-original-title="Tooltip on right" style="float:right;"></span>
+          </div>
+          
+          <div style="width:100%">
+          <select [ngClass]="{ 'is-invalid': submitted && fg.controls.month.errors }" fromControlName-="month" class="form-control" style="width:30%;display:inline" id="birthdate">
+            <option>Month</option>
+            <option *ngFor="let index of month" value="index">{{index}}</option>
+          </select>
+          <select class="form-control" style="width:30%;display:inline" id="birthdate">
+              <option>Day</option>  
+              <option *ngFor="let index of day" value="index">{{index}}</option>
+            </select>
+            <select class="form-control" style="width:30%; display:inline" id="birthdate">
+                <option>Year</option>  
+              <option value="1990">1990</option>
+                <option value="1991">1991</option>
+                <option value="1992">1992</option>
+                <option value="1993">1993</option>
+                <option value="1994">1994</option>
+              </select>
+            </div>
+        </div>
+        <div class="form-group">
+          <input type="checkbox"> <span>Yes I accept the <a href="">Terms & Conditions and privacy Policy </a></span>
+        </div>
+        <div class="form-group">
+            <input type="checkbox"> <span>Yes I would like to recieve new and special offers</span>
+          </div>
+      <div class="form-group">
+        <button class="btn btn-primary" (click)="Register($event)">Register</button>
+        <a [routerLink]="['/login']" class="btn btn-link">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+/ POST Error! Hyperlink reference not valid.
+// parameters sent with
+Error!Hyperlink reference not valid.('/api/v1/parse', function(req, res) {
+    var data = req.body.data;
+    res.status(200);
+
+
+    res.json({
+        firstName: 'JOHN0000',
+        lastNam: "MICHAEL000",
+        clientId: "9994567"
+    })
+
+
+    //
+});
+
+// POST Error! Hyperlink reference not valid.
+// parameters sent with
+Error!Hyperlink reference not valid.('/api/v2/parse', function(req, res) {
+    var data = req.body.data;
+    res.status(200);
+
+
+    res.json({
+        firstName: 'JOHN',
+        lastNam: "MICHAEL",
+        clientId: "999-4567"
+    })
+
+
+    //
+});

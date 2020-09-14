@@ -1,0 +1,282 @@
+@layout("layout")
+@section("header")
+
+@endsection
+
+
+
+
+@section("content")
+
+
+<div id="app">
+
+  <div class="main-wrapper">
+    @include('/home/inc/navbar')
+
+    <div class="main-content">
+      @if(flashMessage('successMessage'))
+      <div class="alert alert-success mb-4">{{ flashMessage('successMessage') }}</div>
+      @endif
+      <section class="section">
+        <div class="section-header">
+          <h1>User</h1>
+          <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="/Home/index">Dashboard</a></div>
+            <div class="breadcrumb-item active"><a href="#">User Management</a></div>
+
+
+            <div class="breadcrumb-item">Users</div>
+          </div>
+
+
+        </div>
+        <div class="section-body">
+          <div class="card card-primary">
+
+
+            <div class="card-body">
+              <ul class="nav nav-tabs" id="myTab2" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="alerts-tab2" data-toggle="tab" href="#alerts2" role="tab" aria-controls="alerts" aria-selected="true">Users</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="events-tab2" data-toggle="tab" href="#events2" role="tab" aria-controls="events" aria-selected="false">User Activity Report</a>
+                </li>
+              </ul>
+              <div class="tab-content tab-bordered" id="myTab3Content">
+                <div class="tab-pane fade show active" id="alerts2" role="tabpanel" aria-labelledby="alerts-tab2">
+              <div class="row">
+                <h2 class="section-title col-md-8">Users</h2>
+                <div class="col-md-4"><a href="{{ route('register.create') }}"
+                    class="btn btn-icon icon-left btn-info float-right" role="button"><i
+                      class="fas fa-plus"></i>Create</a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <p class="section-lead">Components relating to users, lists of users and so on.</p>
+                </div>
+                <div class="col-md-4">
+
+                </div>
+              </div>
+              <!-- <a href="/register" class="btn btn-info" role="button">+ Create</a>-->
+
+
+
+
+              
+              <!-- Table -->
+              <div class="table-responsive">
+                <table class="table table-striped mt-4" id="users">
+                  <thead>
+                    <tr>
+
+                      <th>First Name </th>
+                      <th>Last Name</th>
+                      <th>Email</th>
+                      <th>Company</th>
+                      <th>User Type</th>
+                      <th>Status</th>
+                      <th>Last Login</th>
+                      <th>Action</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  @each(user in Users)                                    
+                  
+                  <tr>
+                    <td>{{ user.first_name }}</td>
+                    <td> {{user.last_name}}</td>
+                    <td><a href="/edituser/{{user.id}}">{{ user.username }}</a></td>
+                    <td>{{ user.tenants.title }}</td>
+                    <td>{{ user.user_role }}</td>
+                    <td>
+                      @if(user.enabled==true)
+
+                      <!--<a href="{{ route('set-Userstatus', { id:user.id }) }}" class="badge badge-success"  >Active </a>-->
+                      <a href="{{ route('set-Userstatus', { id:user.id }) }}" class="badge badge-success">Active </a>
+
+                      @else
+                      <a href="{{ route('set-Userstatus', { id:user.id }) }}" class="badge badge-danger">InActive </a>
+                      @endif
+
+
+                    </td>
+                    @if(user.last_login_at==null)
+                    <td> </td>
+                    @else
+                    <td>
+                      {{user.last_login_at}}
+                    </td>
+                    @endif
+                    <form method="post" action="/setproxy/{{ user.id }}" novalidate>    
+                      {{ csrfField() }}
+                    <td>  
+                      <button name="proxylogin" id="proxylogin" title='Proxy Login' class="btn-sm btn-icon icon-left btn-info fas fa-door-open"></button>                                            
+                      <!-- <a href="{{ route('user.set-proxy', { id:user.id }) }}" class="btn btn-icon btn-sm btn-info" title='Proxy Login'><i class="fas fa-door-open"></i></a>-->
+                      <!-- <a href="#" class="btn btn-secondary">Proxy Login</a> <form method="post" action="/SetProxy/{{user.id}}" id="proxy_form"data-id="{{user.id}}" novalidate>            </form>       -->                    
+                    </td>
+                  </form>
+                    <td>
+
+
+                      <a href="{{ route('set-password', { id:user.id }) }}">Reset</a>
+                    </td>
+                  </tr>
+              
+                  @endeach
+                </table>
+              </div>            
+            </div>
+            @if(user_role == "SystemAdmin" || user_role == "TenantAdmin")
+            <div class="tab-pane fade" id="events2" role="tabpanel" aria-labelledby="events-tab2">
+              <div class="row">
+                <h2 class="section-title col-md-8">User Activity Report</h2>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <p class="section-lead">Please enter the email address you'd like the report sent to and select the month and year you'd like the report to cover.  The report will be generated and emailed to you once you click the "Create Report" button.</p>
+                </div>
+              </div>
+              <form method="post" action="{{ route('register.usage_report') }}">
+                {{ csrfField() }}
+              <div class="form-group col-md-6">
+                <label name="Username" class="control-label">Email Report to:</label>
+                <input name="username" type="email" required class="form-control" value="{{ old('username') }}"
+                  id="username" />
+                @if(hasErrorFor('username'))
+                <div class="alert alert-danger mb-2 mt-2">
+                  {{ getErrorFor('username') }}
+                </div>
+                @endif
+              </div>
+              <div class="form-group col-md-6">
+                <label name="Duration" class="control-label">Report Duration (MM/dd/yyyy):</label>
+                <br>
+                <div>
+                <input name="duration_type" id="month" value="M" type="radio" checked onclick="checkRadio(id)" />&nbsp;<label class="control-label" for="month">Month:</label>
+                </div>
+                <div>
+                <select name="duration" id="duration" required class="form-control selectric" >
+                  <option  value="01">January</option>
+                  <option  value="02">February</option>
+                  <option  value="03">March</option>
+                  <option  value="04">April</option>
+                  <option  value="05">May</option>
+                  <option  value="06">June</option>
+                  <option  value="07">JUly</option>
+                  <option  value="08">August</option>
+                  <option  value="09">September</option>
+                  <option  value="10">October</option>
+                  <option  value="11">November</option>
+                  <option  value="12">December</option>
+                </select>  
+                @if(hasErrorFor('duration'))
+                <div class="alert alert-danger mb-2 mt-2">
+                  {{ getErrorFor('duration') }}
+                </div>
+                @endif
+              </div>
+              <div>
+                <label name="Year" id="Year" class="control-label">Year:</label>
+              </div>  
+              <div>
+                <input name="year" type="number" required class="form-control" id="year" data-validation="number" value="{{ Year }}" pattern="^(19|20)\d{2}$" />
+                @if(hasErrorFor('year'))
+                <div class="alert alert-danger mb-2 mt-2">
+                  {{ getErrorFor('year') }}
+                </div>
+                @endif
+              </div>
+              <div style="visibility:hidden">
+                <input name="duration_type" id="start_date" value="D" type="radio" onclick="checkRadio(id)" />&nbsp;<label class="control-label" for="start_date">Start Date:</label>
+              </div>
+              <div name="startdtDiv" id="startdtDiv" class="form-group col-md-6">
+                <input type="date" required id="duration-start" name="duration-start"
+                  value = "{{ startDate() }}"
+                  min="2019-01-01" max="2050-12-31">
+                  <br>
+                  <label name="enddt" id="enddt" class="control-label">End Date:</label>
+                  <br>
+                  <input type="date" required id="duration-end" name="duration-end"
+                  value = "{{ endDate() }}"
+                  min="2019-01-01" max="2050-12-31">
+                </div>
+              {{--  End of  Usage Report  --}}
+              <div class="text-left">
+                <button name="save" id="save" class="btn btn-icon icon-left btn-info">Create Report</button>
+                </div>
+                @if(hasErrorFor('userroles'))
+                <div class="alert alert-danger mb-2 mt-2">
+                  {{ getErrorFor('userroles') }}
+                </div>
+                @endif
+              </div>               
+            </form>
+            </div>
+            @endif
+          </div>
+        </div>
+      </section>
+
+    </div>
+    @include('/home/inc/footer')
+  </div>
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    $('#users').DataTable( {
+        "order": [[ 3, "desc" ]]
+    } );
+    checkRadio("month");
+    selectElement('duration', '{{ currentMonth() }}' )
+
+} );
+
+function checkRadio(id) {
+  //alert(id)
+  if(id == "start_date") {
+    // hide months
+    var dur = document.getElementById("duration");
+    dur.style.visibility = "hidden";
+    $("#duration").removeAttr('required');
+    var Year = document.getElementById("Year");
+    Year.style.visibility = "hidden";
+    var year = document.getElementById("year");
+    year.style.visibility = "hidden";
+    $("#year").removeAttr('required');
+
+    // show start end
+    var sDiv = document.getElementById("startdtDiv");
+    sDiv.style.visibility = "visible";
+    $("#duration-start").attr('required', ''); 
+    $("#duration-end").attr('required', ''); 
+    
+  }
+  if(id == "month") {
+    // show months
+    var dur = document.getElementById("duration");
+    dur.style.visibility = "visible";
+    $("#duration").attr('required', ''); 
+    var Year = document.getElementById("Year");
+    Year.style.visibility = "visible";
+    var year = document.getElementById("year");
+    year.style.visibility = "visible";
+    $("#year").attr('required');
+    
+    // hide start end
+    var sDiv = document.getElementById("startdtDiv");
+    sDiv.style.visibility = "hidden";
+    $("#duration-start").removeAttr('required');
+    $("#duration-end").removeAttr('required');
+
+  }
+}
+
+
+</script>
+@endsection
